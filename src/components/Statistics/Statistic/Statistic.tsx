@@ -1,10 +1,5 @@
 import React from 'react'
 import './Statistic.css';
-// export default function Statistic() {
-//   return (
-//     <div>Statistic</div>
-//   )
-// }
 
 interface StatisticProps {
     statistic: {
@@ -16,7 +11,7 @@ interface StatisticProps {
   
   const Statistic: React.FC<StatisticProps> = ({ statistic }) => {
     return (
-      <section className="container">
+      <section className="statistic">
         <div className="round" style={{ backgroundColor: statistic.color }}></div>
         <div className="name">{statistic.name}</div>
         <div className="name">{statistic.amount}</div>

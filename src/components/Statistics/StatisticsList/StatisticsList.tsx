@@ -1,47 +1,12 @@
-// import React from 'react'
-// import Statistic from '../Statistic/Statistic';
-
-// const statisticData = {
-//   name: 'Nazwa statystyki',
-//   amount: 100,
-//   color: 'blue'
-// };
-
-// export default function StatisticsList() {
-//   return (
-//     <Statistic statistic={statisticData} />
-//   )
-// }
-
 import React, { useEffect, useState } from 'react';
-import './StatisticsList.css'; // Zaimportuj plik CSS
-import Statistic from '../Statistic/Statistic'; // Zaimportuj komponent Statistic
-//import { statisticModel } from '../models/statistic-model'; // Zaimportuj model danych (jeśli istnieje)
-//import { statisticsallModel } from '../models/StatisticsAll-model'; // Zaimportuj model danych (jeśli istnieje)
-import axios from 'axios'; // Zaimportuj axios lub inne narzędzie do wykonywania żądań HTTP
-
-
-export interface StatisticModel {
-  name: string;
-  amount: number;
-  color: string;
-}
-
-export interface statisticsallModel {
-  ToDo?: number;
-  InProgress?: number;
-  Done?: number;
-  Cancelled?: number;
-}
-
-// const statisticData = {
-//   name: 'Nazwa statystyki',
-//   amount: 100,
-//   color: 'blue'
-// };
+import './StatisticsList.css';
+import Statistic from '../Statistic/Statistic';
+import axios from 'axios';
+import { StatisticModel } from '../../../models/StatisticModel';
+import { StatisticsAllModel } from '../../../models/StatisticsAllModel';
 
 const StatisticsList: React.FC = () => {
-  const [statistics, setStatistics] = useState<statisticsallModel[]>([]);
+  const [statistics, setStatistics] = useState<StatisticModel[]>([]);
 
   useEffect(() => {
     getAllStatistics();
@@ -49,19 +14,17 @@ const StatisticsList: React.FC = () => {
 
   const getAllStatistics = async () => {
     try {
-      const response = await axios.get<statisticsallModel>('https://localhost:44340/api/Statistics');
+      const response = await axios.get<StatisticsAllModel>('https://localhost:5001/api/Statistics');
       const data = response.data;
 
-      console.log(data);
+      const mappedStatistics: StatisticModel[] = [
+        { name: 'To do:', color: 'yellow', amount: data.ToDo ?? 0 },
+        { name: 'In progress:', color: 'blue', amount: data.InProgress ?? 0 },
+        { name: 'Done:', color: 'green', amount: data.Done ?? 0},
+        { name: 'Cancelled:', color: 'red', amount: data.Cancelled ??0  },
+      ];
 
-      // const mappedStatistics: StatisticModel[] = [
-      //   { name: 'To do:', color: 'yellow', amount: data.ToDo },
-      //   { name: 'In progress:', color: 'blue', amount: data.InProgress },
-      //   { name: 'Done:', color: 'green', amount: data.Done },
-      //   { name: 'Cancelled:', color: 'red', amount: data.Cancelled },
-      // ];
-
-      // setStatistics(mappedStatistics);
+      setStatistics(mappedStatistics);
     } catch (error) {
       console.error('Error fetching statistics:', error);
     }
